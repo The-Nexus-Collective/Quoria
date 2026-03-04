@@ -1,0 +1,11 @@
+name: quoria
+region: fra
+static_sites:
+- name: quoria-web
+  github:
+    repo: The-Nexus-Collective/Quoria
+    branch: main
+    deploy_on_push: true
+  source_dir: /
+  index_document: quoria.html
+  catchall_document: quoria.html
