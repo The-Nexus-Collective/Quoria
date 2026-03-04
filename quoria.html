@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quoria — Demand Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#eef2fb;--bg-card:#fff;--bg-deep:#e4ecff;
+      --navy:#0f2356;--blue:#2d6be4;--blue-l:#5b8ff0;
+      --line:#c2d3f5;--line-s:#a0bbf0;
+      --text:#0d1b3e;--text-m:#4a5a7a;--text-l:#8a9bbf;
+      --green:#3ab87a;--grid:rgba(45,108,228,0.06);
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'EB Garamond',Georgia,serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--line-s);border-radius:2px;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+    @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .fu1{animation:fadeUp .8s .05s ease both;}
+    .fu2{animation:fadeUp .8s .2s ease both;}
+    .fu3{animation:fadeUp .8s .38s ease both;}
+    .fu4{animation:fadeUp .8s .55s ease both;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;transition:all .3s;border-bottom:1px solid transparent;}
+    nav.sc{background:rgba(238,242,251,.97);border-bottom-color:var(--line);backdrop-filter:blur(16px);}
+    .logo{cursor:pointer;display:flex;align-items:baseline;gap:12px;}
+    .logo-n{font-family:'EB Garamond',serif;font-size:24px;font-weight:600;color:var(--navy);letter-spacing:.03em;}
+    .logo-s{font-size:10px;color:var(--text-l);letter-spacing:.14em;font-family:'Inter',sans-serif;text-transform:uppercase;}
+    .nav-r{display:flex;gap:16px;align-items:center;}
+    .nav-lnk{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text-m);font-family:'Inter',sans-serif;transition:color .2s;}
+    .nav-lnk:hover,.nav-lnk.on{color:var(--blue);}
+
+    /* LANG SWITCHER */
+    .lang-sw{display:flex;border:1px solid var(--line);overflow:hidden;}
+    .lang-btn{background:var(--bg-card);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.06em;padding:6px 10px;color:var(--text-l);transition:all .15s;}
+    .lang-btn:first-child{border-right:1px solid var(--line);}
+    .lang-btn.on{background:var(--blue);color:#fff;}
+    .lang-btn:hover:not(.on){color:var(--text);}
+
+    /* BUTTONS */
+    .btn{cursor:pointer;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:.07em;border:none;transition:all .2s;display:inline-block;}
+    .bp{background:var(--blue);color:#fff;padding:10px 24px;font-size:12px;box-shadow:0 4px 16px rgba(45,108,228,.2);}
+    .bp:hover{background:var(--navy);}
+    .bpl{background:var(--blue);color:#fff;padding:16px 44px;font-size:14px;box-shadow:0 4px 24px rgba(45,108,228,.28);}
+    .bpl:hover{background:var(--navy);}
+    .bg{background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:16px 44px;font-size:14px;}
+    .bg:hover{background:var(--blue);color:#fff;}
+    .bo{background:none;border:1px solid var(--line);color:var(--blue);padding:10px 24px;font-size:12px;}
+    .bo:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .bd{background:var(--navy);color:#e8eef8;padding:16px 44px;font-size:14px;box-shadow:0 4px 24px rgba(45,108,228,.35);}
+    .bd:hover{background:var(--blue);}
+    .bnext{background:var(--line);color:var(--text-l);padding:14px 36px;font-size:13px;cursor:not-allowed;}
+    .bnext.rdy{background:var(--blue);color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(45,108,228,.25);}
+
+    /* PAGES */
+    .page{display:none;}.page.on{display:block;}
+
+    /* HERO */
+    #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:60px 60px;}
+    .hcorner{position:absolute;width:28px;height:28px;opacity:.5;}
+    .hc-tl{top:80px;left:24px;border-top:1.5px solid var(--line-s);border-left:1.5px solid var(--line-s);}
+    .hc-tr{top:80px;right:24px;border-top:1.5px solid var(--line-s);border-right:1.5px solid var(--line-s);}
+    .hc-bl{bottom:24px;left:24px;border-bottom:1.5px solid var(--line-s);border-left:1.5px solid var(--line-s);}
+    .hc-br{bottom:24px;right:24px;border-bottom:1.5px solid var(--line-s);border-right:1.5px solid var(--line-s);}
+    .hghost{position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'EB Garamond',serif;font-size:clamp(160px,20vw,320px);font-weight:700;color:rgba(45,108,228,.05);line-height:1;letter-spacing:-.05em;user-select:none;pointer-events:none;}
+    .hlabel{position:absolute;left:48px;top:92px;font-size:10px;font-family:'Inter',sans-serif;color:var(--text-l);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+    .hlabel span{display:block;width:28px;height:1px;background:var(--line-s);}
+    .hcontent{max-width:900px;position:relative;z-index:1;}
+    .pill{display:inline-flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--line);padding:8px 18px;margin-bottom:40px;box-shadow:0 2px 12px rgba(45,108,228,.08);font-size:12px;font-family:'Inter',sans-serif;color:var(--text-m);letter-spacing:.04em;}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;flex-shrink:0;}
+    h1.hh{font-family:'EB Garamond',serif;font-size:clamp(48px,7.5vw,108px);font-weight:400;line-height:.94;letter-spacing:-.025em;margin-bottom:40px;color:var(--navy);}
+    h1.hh em{color:var(--blue);font-style:italic;}
+    .hsub{font-family:'EB Garamond',serif;font-size:20px;line-height:1.75;color:var(--text-m);max-width:560px;margin-bottom:48px;}
+    .hsub strong{color:var(--navy);font-weight:500;}
+    .hctas{display:flex;gap:12px;flex-wrap:wrap;}
+
+    /* WHY NOW */
+    .wy{background:var(--navy);color:#e8eef8;padding:100px 48px;position:relative;overflow:hidden;}
+    .wy::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;}
+    .wy-in{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+    .sl{font-size:10px;font-family:'Inter',sans-serif;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;}
+    .sl-gold{color:var(--blue-l);}
+    .sl-blue{color:var(--blue);}
+    .sl-green{color:var(--green);}
+    .wy-h{font-family:'EB Garamond',serif;font-size:clamp(36px,5vw,64px);font-weight:400;line-height:1.1;letter-spacing:-.02em;margin-bottom:64px;}
+    .wy-h em{color:var(--blue-l);font-style:italic;}
+    .acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;}
+    .act{background:rgba(255,255,255,.04);padding:40px 32px;border-top:3px solid transparent;}
+    .act-1{border-top-color:rgba(255,255,255,.15);}
+    .act-2{border-top-color:var(--blue-l);}
+    .act-3{border-top-color:var(--green);background:rgba(58,184,122,.06);}
+    .act-lbl{font-size:9px;font-family:'Inter',sans-serif;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;opacity:.5;}
+    .act-3 .act-lbl{color:var(--green);opacity:1;}
+    .act-h{font-family:'EB Garamond',serif;font-size:26px;font-weight:400;margin-bottom:16px;line-height:1.2;}
+    .act-b{font-family:'Inter',sans-serif;font-size:14px;color:rgba(232,238,248,.65);line-height:1.75;font-weight:300;}
+    .act-3 .act-b{color:rgba(232,238,248,.8);}
+
+    /* THE NUMBER */
+    .tnum{padding:100px 48px;max-width:1100px;margin:0 auto;}
+    .ngrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .nh{font-family:'EB Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.25;color:var(--navy);margin-bottom:28px;margin-top:12px;}
+    .nb{font-family:'EB Garamond',serif;font-size:19px;line-height:1.8;color:var(--text-m);margin-bottom:20px;}
+    .nstats{display:flex;flex-direction:column;gap:2px;}
+    .nstat{background:var(--bg-card);border:1px solid var(--line);border-left:4px solid var(--blue);padding:28px 32px;}
+    .nstat.hi{border-left-color:var(--green);background:linear-gradient(135deg,#f0fdf6,var(--bg-card));}
+    .nstat-n{font-family:'EB Garamond',serif;font-size:52px;font-weight:400;color:var(--blue);line-height:1;margin-bottom:6px;}
+    .nstat.hi .nstat-n{color:var(--green);}
+    .nstat-l{font-size:13px;font-family:'Inter',sans-serif;color:var(--text-m);line-height:1.5;}
+    .nstat-s{font-size:11px;font-family:'Inter',sans-serif;color:var(--text-l);margin-top:4px;letter-spacing:.04em;}
+
+    /* HOW */
+    .how{background:var(--bg-card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:80px 48px;}
+    .how-in{max-width:1100px;margin:0 auto;}
+    .how-h{font-family:'EB Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:400;letter-spacing:-.01em;color:var(--navy);margin-top:12px;margin-bottom:48px;}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;}
+    .step{background:var(--bg);padding:28px 24px;position:relative;}
+    .step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--line-s);font-size:18px;z-index:1;}
+    .step:last-child::after{display:none;}
+    .sn{font-size:10px;font-family:'Inter',sans-serif;color:var(--blue);letter-spacing:.15em;margin-bottom:16px;}
+    .sh{font-family:'EB Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:10px;}
+    .sb{font-size:13px;font-family:'Inter',sans-serif;color:var(--text-m);line-height:1.6;font-weight:300;}
+    .step-hi{background:var(--navy);}
+    .step-hi .sn{color:var(--green);}
+    .step-hi .sh{color:#e8eef8;}
+    .step-hi .sb{color:rgba(232,238,248,.65);}
+
+    /* TICKER */
+    .ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;overflow:hidden;background:var(--bg-card);}
+    .ttrack{display:flex;animation:marquee 40s linear infinite;white-space:nowrap;}
+    .titem{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-l);letter-spacing:.1em;text-transform:uppercase;padding:0 32px;flex-shrink:0;}
+
+    /* DEMAND */
+    .dsec{padding:80px 48px;}
+    .din{max-width:1100px;margin:0 auto;}
+    .dh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;}
+    .dh h2{font-family:'EB Garamond',serif;font-size:40px;font-weight:400;letter-spacing:-.01em;color:var(--navy);margin-top:12px;}
+    .dmeta{font-size:13px;font-family:'Inter',sans-serif;color:var(--text-l);margin-bottom:32px;font-style:italic;}
+
+    /* ROW */
+    .drow{display:grid;grid-template-columns:44px 1fr 90px 64px;gap:24px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line);transition:background .15s;}
+    .drow:hover{background:var(--bg-deep);margin:0 -16px;padding:22px 16px;}
+    .ridx{font-family:'EB Garamond',serif;font-size:26px;color:var(--line-s);font-weight:400;text-align:right;line-height:1;}
+    .rtw{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+    .rtitle{font-family:'EB Garamond',serif;font-size:19px;font-weight:500;color:var(--navy);}
+    .badge{font-size:9px;font-family:'Inter',sans-serif;letter-spacing:.1em;padding:2px 8px;text-transform:uppercase;}
+    .bb{color:var(--blue);border:1px solid rgba(45,108,228,.25);}
+    .bg2{color:var(--green);border:1px solid rgba(58,184,122,.3);}
+    .rdesc{font-size:13px;color:var(--text-m);font-family:'Inter',sans-serif;margin-bottom:10px;line-height:1.5;font-weight:300;}
+    .rmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .pwrap{height:3px;width:120px;background:var(--line);border-radius:2px;flex-shrink:0;}
+    .pfill{height:100%;border-radius:2px;transition:width .5s;}
+    .rpt{font-size:11px;font-family:'Inter',sans-serif;color:var(--text-l);}
+    .sec{font-size:10px;font-family:'Inter',sans-serif;color:var(--text-l);background:var(--bg-deep);padding:2px 8px;letter-spacing:.04em;}
+    .rwtp{text-align:right;}
+    .wn{font-family:'EB Garamond',serif;font-size:22px;color:var(--blue);font-weight:500;}
+    .wl{font-size:9px;font-family:'Inter',sans-serif;color:var(--text-l);letter-spacing:.1em;text-transform:uppercase;}
+    .vbtn{background:transparent;border:1.5px solid var(--line);color:var(--text-m);padding:10px 12px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;min-width:56px;}
+    .vbtn:hover,.vbtn.v{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .varr{font-size:11px;}
+    .vcnt{font-size:14px;font-family:'EB Garamond',serif;font-weight:500;}
+
+    /* BOTTOM CTA */
+    .bcta{background:var(--navy);padding:100px 48px;position:relative;overflow:hidden;}
+    .bcta::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;}
+    .bcta-in{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:48px;position:relative;z-index:1;}
+    .bcta h2{font-family:'EB Garamond',serif;font-size:clamp(40px,5vw,72px);font-weight:400;color:#e8eef8;line-height:1.0;letter-spacing:-.02em;}
+    .bcta h2 em{color:var(--blue-l);}
+    .bcta-r{display:flex;flex-direction:column;gap:20px;align-items:flex-start;}
+    .bcta-s{font-family:'EB Garamond',serif;font-size:20px;color:rgba(232,238,248,.55);max-width:380px;line-height:1.65;}
+
+    /* BOARD */
+    #board-page{padding-top:64px;min-height:100vh;}
+    .bwrap{padding:60px 48px 0;max-width:1100px;margin:0 auto;}
+    .btop{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;}
+    .btop h1{font-family:'EB Garamond',serif;font-size:48px;font-weight:400;letter-spacing:-.02em;line-height:1;color:var(--navy);margin-top:12px;}
+    .btop h1 em{color:var(--blue);}
+    .ctrl{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+    .swrap{position:relative;flex:1;min-width:220px;}
+    .sicon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-l);font-size:15px;}
+    .sinp{width:100%;background:var(--bg-card);border:1px solid var(--line);color:var(--text);padding:11px 16px 11px 36px;font-size:13px;font-family:'Inter',sans-serif;outline:none;}
+    .sinp:focus{border-color:var(--blue);}
+    .cats{display:flex;gap:4px;flex-wrap:wrap;}
+    .cbt{background:var(--bg-card);color:var(--text-m);border:1px solid var(--line);padding:8px 14px;cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;}
+    .cbt.on,.cbt:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .ssel{background:var(--bg-card);border:1px solid var(--line);color:var(--text-m);padding:9px 12px;font-size:11px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;}
+    .binfo{font-size:11px;font-family:'Inter',sans-serif;color:var(--text-l);margin-bottom:24px;letter-spacing:.04em;}
+    .brows{max-width:1100px;margin:0 auto;padding:0 48px 80px;}
+    .empty{text-align:center;padding:80px 0;}
+    .empty p{font-family:'EB Garamond',serif;font-size:26px;font-style:italic;color:var(--text-l);margin-bottom:24px;}
+
+    /* INTERVIEW */
+    #iv-page{padding-top:64px;min-height:100vh;background:var(--bg);}
+    .ptrack{height:3px;background:var(--line);position:fixed;top:64px;left:0;right:0;z-index:100;}
+    .pfbar{height:100%;background:var(--blue);transition:width .5s ease;}
+    .ivwrap{max-width:740px;margin:0 auto;padding:80px 48px;min-height:calc(100vh - 64px);display:flex;flex-direction:column;justify-content:center;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;}
+    .sbars{display:flex;gap:4px;margin-bottom:48px;}
+    .sbar{height:3px;flex:1;border-radius:2px;transition:all .3s;}
+    .sbar.d{background:var(--blue);}
+    .sbar.c{background:rgba(91,143,240,.45);}
+    .sbar.f{background:var(--line);}
+    .qcnt{font-size:10px;font-family:'Inter',sans-serif;letter-spacing:.2em;color:var(--blue);text-transform:uppercase;margin-bottom:24px;}
+    .qq{font-family:'EB Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.2;margin-bottom:12px;color:var(--navy);}
+    .qsub{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:var(--text-m);margin-bottom:36px;line-height:1.6;}
+    .qta{width:100%;background:var(--bg-card);border:1px solid var(--line);border-bottom:2px solid var(--blue);color:var(--text);padding:20px;font-size:17px;font-family:'EB Garamond',serif;resize:none;outline:none;line-height:1.7;margin-bottom:20px;box-shadow:0 2px 16px rgba(45,108,228,.05);}
+    .qact{display:flex;justify-content:space-between;align-items:center;}
+    .qhint{font-size:11px;color:var(--text-l);font-family:'Inter',sans-serif;}
+
+    /* SUCCESS */
+    .succ-lbl{font-size:10px;font-family:'Inter',sans-serif;letter-spacing:.2em;color:var(--green);text-transform:uppercase;margin-bottom:28px;}
+    .succ-h{font-family:'EB Garamond',serif;font-size:clamp(34px,5vw,60px);font-weight:400;line-height:1.05;letter-spacing:-.02em;margin-bottom:36px;color:var(--navy);}
+    .succ-h em{color:var(--blue);}
+    .mbox{background:var(--bg-card);border:1px solid var(--line);border-left:4px solid var(--green);padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;gap:32px;}
+    .mn{font-family:'EB Garamond',serif;font-size:64px;font-weight:300;color:var(--green);line-height:1;}
+    .mt{font-family:'EB Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:6px;}
+    .ms{font-size:13px;font-family:'Inter',sans-serif;color:var(--text-m);line-height:1.5;}
+    .brbox{background:var(--bg-card);border:1px solid var(--line);padding:24px 28px;margin-bottom:28px;}
+    .brtl{font-size:10px;font-family:'Inter',sans-serif;letter-spacing:.15em;color:var(--text-l);text-transform:uppercase;margin-bottom:20px;}
+    .bre{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+    .bre:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+    .brk{font-size:10px;font-family:'Inter',sans-serif;color:var(--text-l);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+    .brv{font-family:'EB Garamond',serif;font-size:17px;color:var(--navy);line-height:1.6;}
+    .sacts{display:flex;gap:12px;flex-wrap:wrap;}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}
+      .nav-r{gap:10px;}
+      #hero{padding:100px 20px 60px;}
+      .acts{grid-template-columns:1fr;}
+      .ngrid{grid-template-columns:1fr;gap:40px;}
+      .steps{grid-template-columns:1fr 1fr;}
+      .step::after{display:none;}
+      .drow{grid-template-columns:1fr auto;}
+      .ridx{display:none;}
+      .bcta-in{flex-direction:column;}
+      .btop{flex-direction:column;align-items:flex-start;gap:20px;}
+      .ivwrap{padding:60px 20px;}
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="logo" onclick="go('land')">
+    <span class="logo-n">Quoria</span>
+  </div>
+  <div class="nav-r">
+    <div class="lang-sw">
+      <button class="lang-btn on" id="lang-de" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="nav-lnk btn" id="nb" data-t="navBoard" onclick="go('board')">Demand Board</button>
+    <button class="btn bp" id="nav-cta" data-t="navCta" onclick="go('iv')">Mitgestalten</button>
+  </div>
+</nav>
+
+<!-- ═══ LANDING ═══ -->
+<div id="land-page" class="page on">
+
+  <section id="hero">
+    <div class="hcorner hc-tl"></div><div class="hcorner hc-tr"></div>
+    <div class="hcorner hc-bl"></div><div class="hcorner hc-br"></div>
+    <div class="hlabel"><span></span>Demand Intelligence Platform — quoria.ai<span></span></div>
+    <div class="hghost" id="ghost">172</div>
+    <div class="hcontent">
+      <div class="pill fu1"><span class="dot"></span><span><strong id="livn">172</strong> <span data-t="pillTxt">Unternehmen haben ihr Problem bereits beschrieben</span></span></div>
+      <h1 class="hh fu2" data-t="heroH1">Einzeln ein Betrieb.<br><em>Zusammen ein Markt.</em></h1>
+      <p class="hsub fu3" data-t="heroSub">AI hat die Kosten für Softwareentwicklung um <strong>90% gesenkt</strong>. Zum ersten Mal ist es profitabel, Software für 50 Unternehmen zu bauen — nicht erst ab 5.000. Quoria nutzt genau das.</p>
+      <div class="hctas fu4">
+        <button class="btn bpl" data-t="heroCta1" onclick="go('iv')">Ich bin dabei →</button>
+        <button class="btn bg" data-t="heroCta2" onclick="go('board')">Was andere beschreiben</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker"><div class="ttrack" id="ttrack"></div></div>
+
+  <!-- WHY NOW -->
+  <div class="wy">
+    <div class="wy-in">
+      <div class="sl sl-gold" data-t="wyLabel">Warum jetzt</div>
+      <h2 class="wy-h" data-t="wyH">Eine Verschiebung die alles ändert.<br><em>Für den Mittelstand.</em></h2>
+      <div class="acts">
+        <div class="act act-1">
+          <div class="act-lbl" data-t="act1Lbl">Das alte Problem</div>
+          <div class="act-h" data-t="act1H">Software war nie für euch gebaut.</div>
+          <div class="act-b" data-t="act1B">SAP für Konzerne. Excel für alle anderen. Der Mittelstand war zu groß für Individualentwicklung und zu klein für Standardsoftware. Nicht aus bösem Willen — sondern aus simpler Ökonomie: Die Entwicklungskosten waren zu hoch. Der Break-Even nicht erreichbar. 3,5 Millionen Unternehmen systematisch ignoriert.</div>
+        </div>
+        <div class="act act-2">
+          <div class="act-lbl" data-t="act2Lbl">Die Verschiebung</div>
+          <div class="act-h" data-t="act2H">AI hat die Gleichung gebrochen.</div>
+          <div class="act-b" data-t="act2B">Was 2020 eine halbe Million Euro Entwicklungskosten bedeutete, kostet heute einen Bruchteil davon. Nicht weil Qualität leidet — sondern weil AI die Produktivität von Entwicklern um das Zehnfache erhöht hat. Der Break-Even liegt nicht mehr bei 5.000 Kunden. Er liegt bei 50. Das ist kein Fortschritt. Das ist ein Paradigmenwechsel.</div>
+        </div>
+        <div class="act act-3">
+          <div class="act-lbl" data-t="act3Lbl">Quoria</div>
+          <div class="act-h" data-t="act3H">Wir aggregieren die 50.</div>
+          <div class="act-b" data-t="act3B">Quoria verbindet den Mittelstand mit Verbänden als Distributionskanal — und nutzt AI um Nachfrage zu clustern. Sobald 50 Unternehmen dasselbe Problem beschrieben haben, ist der Build profitabel. Wir bauen. Alle Einreicher erhalten die Lösung als Erste — dauerhaft zum Gründerpreis. Kein Risiko. Kein Warten.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE NUMBER -->
+  <div class="tnum">
+    <div class="ngrid">
+      <div>
+        <div class="sl sl-blue" data-t="numLabel">Das Quorum-Prinzip</div>
+        <h2 class="nh" data-t="numH">Früher brauchte man 5.000 Kunden um Software profitabel zu bauen.<br>Heute reichen 50.</h2>
+        <p class="nb" data-t="numP1">Das ist keine Schätzung — das ist Mathematik. AI hat die Entwicklungskosten so dramatisch gesenkt, dass der Break-Even-Punkt für ein SaaS-Produkt um das 100-fache gesunken ist.</p>
+        <p class="nb" data-t="numP2">Quoria nutzt genau diesen Moment. Wir sammeln Nachfrage bis das Quorum erreicht ist — und dann bauen wir. Jedes Mal. Für jeden Cluster der die Schwelle erreicht.</p>
+      </div>
+      <div class="nstats">
+        <div class="nstat">
+          <div class="nstat-n">−90%</div>
+          <div class="nstat-l" data-t="stat1L">Rückgang der Softwareentwicklungskosten durch AI seit 2022</div>
+          <div class="nstat-s" data-t="stat1S">Was früher €500k kostete, kostet heute €50k</div>
+        </div>
+        <div class="nstat">
+          <div class="nstat-n">100×</div>
+          <div class="nstat-l" data-t="stat2L">Niedrigerer Break-Even für ein SaaS-Produkt</div>
+          <div class="nstat-s" data-t="stat2S">Früher: 5.000 Kunden nötig · Heute: 50</div>
+        </div>
+        <div class="nstat hi">
+          <div class="nstat-n">50</div>
+          <div class="nstat-l" data-t="stat3L">Unternehmen = Build-Signal</div>
+          <div class="nstat-s" data-t="stat3S">Einreicher erhalten dauerhaft −40% auf den Listenpreis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW -->
+  <div class="how">
+    <div class="how-in">
+      <div class="sl sl-blue" data-t="howLabel">Der Prozess</div>
+      <h2 class="how-h" data-t="howH">Vom Problem zum Produkt.</h2>
+      <div class="steps">
+        <div class="step"><div class="sn">01</div><div class="sh" data-t="step1H">Problem beschreiben</div><div class="sb" data-t="step1B">5-minütiges AI-Interview. Kein Formular, kein Login. Die KI versteht das Problem hinter dem Problem.</div></div>
+        <div class="step"><div class="sn">02</div><div class="sh" data-t="step2H">Cluster bildet sich</div><div class="sb" data-t="step2B">Das System erkennt semantisch ähnliche Probleme — auch wenn sie unterschiedlich formuliert sind.</div></div>
+        <div class="step"><div class="sn">03</div><div class="sh" data-t="step3H">Quorum erreicht</div><div class="sb" data-t="step3B">50 Unternehmen mit demselben Problem. Der Break-Even ist erreicht. Das Build-Signal wird ausgelöst.</div></div>
+        <div class="step"><div class="sn">04</div><div class="sh" data-t="step4H">Nexus baut</div><div class="sb" data-t="step4B">Nexus Collective entwickelt das Produkt — mit AI, schnell, für den Markt. Nicht für einen einzelnen Kunden.</div></div>
+        <div class="step step-hi"><div class="sn">05</div><div class="sh" data-t="step5H">Gründerpreis</div><div class="sb" data-t="step5B">Einreicher bekommen dauerhaft −40% auf den Listenpreis. Zugang vor dem öffentlichen Launch.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE DEMAND -->
+  <div class="dsec">
+    <div class="din">
+      <div class="dh">
+        <div><div class="sl sl-blue" data-t="dsecLabel">Live · Demand Board</div><h2 data-t="dsecH">Was gerade gesammelt wird.</h2></div>
+        <button class="btn bo" data-t="dsecBtn" onclick="go('board')">Alle ansehen</button>
+      </div>
+      <p class="dmeta" data-t="dsecMeta">Upvoten bedeutet: "Ich habe dasselbe Problem" — jede Stimme bringt den Build-Trigger näher.</p>
+      <div id="lrows"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bcta">
+    <div class="bcta-in">
+      <h2 data-t="bctaH">Einzeln ein Betrieb.<br><em>Zusammen ein Markt.</em></h2>
+      <div class="bcta-r">
+        <p class="bcta-s" data-t="bctaS">Zum ersten Mal in der Geschichte ist Software für 50 Unternehmen profitabel. <strong style="color:#e8eef8">Ihres könnte das nächste Build-Signal auslösen.</strong></p>
+        <button class="btn bd" data-t="bctaBtn" onclick="go('iv')">Jetzt mitmachen →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOARD ═══ -->
+<div id="board-page" class="page">
+  <div class="bwrap">
+    <div class="btop">
+      <div><div class="sl sl-blue" data-t="boardLabel">Demand Board</div><h1 data-t="boardH">Was den Mittelstand<br><em>gerade bewegt.</em></h1></div>
+      <button class="btn bpl" data-t="boardSubmit" onclick="go('iv')">+ Problem einreichen</button>
+    </div>
+    <div class="ctrl">
+      <div class="swrap"><span class="sicon">⌕</span><input type="text" class="sinp" id="sinp" placeholder="Branche oder Thema suchen..." oninput="rb()"></div>
+      <div class="cats" id="cats"></div>
+      <select class="ssel" id="ssel" onchange="rb()">
+        <option value="count" data-t="sortVotes">Nach Stimmen</option>
+        <option value="wtp" data-t="sortWtp">Nach Zahlungsbereitschaft</option>
+        <option value="progress" data-t="sortProgress">Nach Fortschritt</option>
+      </select>
+    </div>
+    <div class="binfo" id="binfo"></div>
+  </div>
+  <div class="brows" id="brows"></div>
+</div>
+
+<!-- ═══ INTERVIEW ═══ -->
+<div id="iv-page" class="page">
+  <div class="ptrack"><div class="pfbar" id="pfbar"></div></div>
+  <div class="ivwrap">
+    <div id="qv">
+      <div class="sbars" id="sbars"></div>
+      <div class="qcnt" id="qcnt"></div>
+      <h2 class="qq" id="qtxt"></h2>
+      <p class="qsub" id="qsub"></p>
+      <textarea class="qta" id="qta" rows="4" oninput="oai()"></textarea>
+      <div class="qact">
+        <span class="qhint" data-t="qHint">⌘ + Enter zum Weiter</span>
+        <button class="btn bnext" id="bnext" onclick="nxtq()">Weiter →</button>
+      </div>
+    </div>
+    <div id="sv" style="display:none">
+      <div class="succ-lbl" data-t="succLabel">✓ Eingereicht</div>
+      <h2 class="succ-h" data-t="succH">Ihr Problem ist<br><em>nicht allein.</em></h2>
+      <div class="mbox">
+        <div class="mn" id="mn">23</div>
+        <div>
+          <div class="mt" data-t="succMt">andere Unternehmen haben ein ähnliches Problem beschrieben.</div>
+          <div class="ms" data-t="succMs">Schwelle für Build-Signal: 50 Einreichungen. Jede Stimme zählt.</div>
+        </div>
+      </div>
+      <div class="brbox">
+        <div class="brtl" data-t="succBrtl">Ihr automatisch generierter Problem-Brief</div>
+        <div id="brc"></div>
+      </div>
+      <div class="sacts">
+        <button class="btn bpl" data-t="succBtn1" onclick="go('board')">Demand Board ansehen →</button>
+        <button class="btn bo" style="padding:16px 32px" data-t="succBtn2" onclick="ri();go('land')">Zur Startseite</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CL_BASE=[
+  {id:1,count:47,thr:50,wtp:89,tr:true},
+  {id:2,count:31,thr:50,wtp:120,tr:true},
+  {id:3,count:24,thr:50,wtp:65,tr:false},
+  {id:4,count:19,thr:50,wtp:79,tr:false},
+  {id:5,count:16,thr:50,wtp:55,tr:false},
+  {id:6,count:14,thr:50,wtp:99,tr:false},
+  {id:7,count:12,thr:50,wtp:39,tr:false},
+  {id:8,count:9,thr:50,wtp:49,tr:false},
+];
+
+const T={
+de:{
+  navBoard:"Demand Board",
+  navCta:"Mitgestalten",
+  pillTxt:"Unternehmen haben ihr Problem bereits beschrieben",
+  heroH1:'Einzeln ein Betrieb.<br><em>Zusammen ein Markt.</em>',
+  heroSub:'AI hat die Kosten für Softwareentwicklung um <strong>90% gesenkt</strong>. Zum ersten Mal ist es profitabel, Software für 50 Unternehmen zu bauen — nicht erst ab 5.000. Quoria nutzt genau das.',
+  heroCta1:"Ich bin dabei →",
+  heroCta2:"Was andere beschreiben",
+  wyLabel:"Warum jetzt",
+  wyH:'Eine Verschiebung die alles ändert.<br><em>Für den Mittelstand.</em>',
+  act1Lbl:"Das alte Problem",
+  act1H:"Software war nie für euch gebaut.",
+  act1B:"SAP für Konzerne. Excel für alle anderen. Der Mittelstand war zu groß für Individualentwicklung und zu klein für Standardsoftware. Nicht aus bösem Willen — sondern aus simpler Ökonomie: Die Entwicklungskosten waren zu hoch. Der Break-Even nicht erreichbar. 3,5 Millionen Unternehmen systematisch ignoriert.",
+  act2Lbl:"Die Verschiebung",
+  act2H:"AI hat die Gleichung gebrochen.",
+  act2B:"Was 2020 eine halbe Million Euro Entwicklungskosten bedeutete, kostet heute einen Bruchteil davon. Nicht weil Qualität leidet — sondern weil AI die Produktivität von Entwicklern um das Zehnfache erhöht hat. Der Break-Even liegt nicht mehr bei 5.000 Kunden. Er liegt bei 50. Das ist kein Fortschritt. Das ist ein Paradigmenwechsel.",
+  act3Lbl:"Quoria",
+  act3H:"Wir aggregieren die 50.",
+  act3B:"Quoria verbindet den Mittelstand mit Verbänden als Distributionskanal — und nutzt AI um Nachfrage zu clustern. Sobald 50 Unternehmen dasselbe Problem beschrieben haben, ist der Build profitabel. Wir bauen. Alle Einreicher erhalten die Lösung als Erste — dauerhaft zum Gründerpreis. Kein Risiko. Kein Warten.",
+  numLabel:"Das Quorum-Prinzip",
+  numH:'Früher brauchte man 5.000 Kunden um Software profitabel zu bauen.<br>Heute reichen 50.',
+  numP1:"Das ist keine Schätzung — das ist Mathematik. AI hat die Entwicklungskosten so dramatisch gesenkt, dass der Break-Even-Punkt für ein SaaS-Produkt um das 100-fache gesunken ist.",
+  numP2:"Quoria nutzt genau diesen Moment. Wir sammeln Nachfrage bis das Quorum erreicht ist — und dann bauen wir. Jedes Mal. Für jeden Cluster der die Schwelle erreicht.",
+  stat1L:"Rückgang der Softwareentwicklungskosten durch AI seit 2022",
+  stat1S:"Was früher €500k kostete, kostet heute €50k",
+  stat2L:"Niedrigerer Break-Even für ein SaaS-Produkt",
+  stat2S:"Früher: 5.000 Kunden nötig · Heute: 50",
+  stat3L:"Unternehmen = Build-Signal",
+  stat3S:"Einreicher erhalten dauerhaft −40% auf den Listenpreis",
+  howLabel:"Der Prozess",
+  howH:"Vom Problem zum Produkt.",
+  step1H:"Problem beschreiben",
+  step1B:"5-minütiges AI-Interview. Kein Formular, kein Login. Die KI versteht das Problem hinter dem Problem.",
+  step2H:"Cluster bildet sich",
+  step2B:"Das System erkennt semantisch ähnliche Probleme — auch wenn sie unterschiedlich formuliert sind.",
+  step3H:"Quorum erreicht",
+  step3B:"50 Unternehmen mit demselben Problem. Der Break-Even ist erreicht. Das Build-Signal wird ausgelöst.",
+  step4H:"Nexus baut",
+  step4B:"Nexus Collective entwickelt das Produkt — mit AI, schnell, für den Markt. Nicht für einen einzelnen Kunden.",
+  step5H:"Gründerpreis",
+  step5B:"Einreicher bekommen dauerhaft −40% auf den Listenpreis. Zugang vor dem öffentlichen Launch.",
+  dsecLabel:"Live · Demand Board",
+  dsecH:"Was gerade gesammelt wird.",
+  dsecBtn:"Alle ansehen",
+  dsecMeta:'Upvoten bedeutet: "Ich habe dasselbe Problem" — jede Stimme bringt den Build-Trigger näher.',
+  bctaH:'Einzeln ein Betrieb.<br><em>Zusammen ein Markt.</em>',
+  bctaS:'Zum ersten Mal in der Geschichte ist Software für 50 Unternehmen profitabel. <strong style="color:#e8eef8">Ihres könnte das nächste Build-Signal auslösen.</strong>',
+  bctaBtn:"Jetzt mitmachen →",
+  boardLabel:"Demand Board",
+  boardH:'Was den Mittelstand<br><em>gerade bewegt.</em>',
+  boardSubmit:"+ Problem einreichen",
+  boardSearch:"Branche oder Thema suchen...",
+  sortVotes:"Nach Stimmen",
+  sortWtp:"Nach Zahlungsbereitschaft",
+  sortProgress:"Nach Fortschritt",
+  qHint:"\u2318 + Enter zum Weiter",
+  qNext:"Weiter →",
+  qSubmit:"Abschicken",
+  qFrage:"Frage",
+  succLabel:"\u2713 Eingereicht",
+  succH:'Ihr Problem ist<br><em>nicht allein.</em>',
+  succMt:"andere Unternehmen haben ein ähnliches Problem beschrieben.",
+  succMs:"Schwelle für Build-Signal: 50 Einreichungen. Jede Stimme zählt.",
+  succBrtl:"Ihr automatisch generierter Problem-Brief",
+  succBtn1:"Demand Board ansehen →",
+  succBtn2:"Zur Startseite",
+  badgeTrending:"\u2191 Trending",
+  badgeNear:"Fast erreicht",
+  perMonth:"/ Monat",
+  tickerUnit:"Unternehmen",
+  topicsUnit:"Themen",
+  upvoteHint:'Upvoten = "Ich habe dasselbe Problem"',
+  emptyTitle:"Kein Treffer — vielleicht ein neues Problem?",
+  emptyBtn:"Problem beschreiben →",
+  categories:["Alle","Vertrieb","Personal","Qualit\u00e4t","Einkauf","Betrieb","Finanzen"],
+  clusters:[
+    {title:"Angebotserstellung & Kalkulation",cat:"Vertrieb",desc:"Angebote manuell in Excel, Kalkulationsfehler, zu lange Reaktionszeiten gegen\u00fcber Kunden.",sec:["Handwerk","Bau","Geb\u00e4udetechnik"]},
+    {title:"Mitarbeitereinsatzplanung",cat:"Personal",desc:"Schichtplanung per WhatsApp und Excel, Krankmeldungen kaum koordinierbar, kein Echtzeit-\u00dcberblick.",sec:["Pflege","Reinigung","Gastronomie"]},
+    {title:"Compliance & HACCP-Dokumentation",cat:"Qualit\u00e4t",desc:"Pflichtdokumentation kostet t\u00e4glich Stunden, papierbasierte Prozesse, Pr\u00fcfungsangst.",sec:["Lebensmittel","Gastronomie","Produktion"]},
+    {title:"Lieferantenbewertung & -auswahl",cat:"Einkauf",desc:"Kein strukturiertes System, Entscheidungen aus dem Bauch, fehlende Vergleichbarkeit.",sec:["Produktion","Handel","Logistik"]},
+    {title:"Kundenportal & Self-Service",cat:"Vertrieb",desc:"Kunden fragen st\u00e4ndig nach Auftragsstatus, manuelle E-Mail-Updates, kein Tracking.",sec:["Dienstleister","Handwerk","Agenturen"]},
+    {title:"Wartungsmanagement & Pr\u00fcffristen",cat:"Betrieb",desc:"Wartungsintervalle per Kalender, Pr\u00fcffristen werden \u00fcbersehen, ungeplante Ausf\u00e4lle.",sec:["Produktion","Logistik","Bau"]},
+    {title:"Reisekostenabrechnung",cat:"Finanzen",desc:"Belege sammeln, manuell eingeben, monatliche Abrechnung kostet Stunden pro Mitarbeiter.",sec:["Beratung","Vertrieb","Handwerk"]},
+    {title:"Schulungsmanagement & Zertifikate",cat:"Personal",desc:"Keine \u00dcbersicht \u00fcber Ablaufdaten, Schulungen werden vergessen, Compliance-Risiken.",sec:["Produktion","Pflege","Transport"]},
+  ],
+  questions:[
+    {q:"In welcher Branche ist Ihr Unternehmen t\u00e4tig, und wie viele Mitarbeiter haben Sie?",s:"Damit wir Ihren Kontext verstehen — kein Pflichtfeld.",p:"z.B. Sanit\u00e4rbetrieb, 12 Mitarbeiter...",f:"Branche & Gr\u00f6\u00dfe"},
+    {q:"Was kostet Sie t\u00e4glich am meisten Zeit oder Nerven?",s:"Beschreiben Sie es so wie Sie es einem Kollegen erkl\u00e4ren w\u00fcrden.",p:"Bei uns ist es immer dann chaotisch, wenn...",f:"Problem"},
+    {q:"Wie l\u00f6sen Sie das heute — auch wenn die L\u00f6sung unbefriedigend ist?",s:"Excel, Telefon, manuell, gar nicht — alles ist g\u00fcltig.",p:"Meistens machen wir das mit...",f:"Aktueller Workaround"},
+    {q:"Wenn es morgen eine perfekte L\u00f6sung g\u00e4be — was m\u00fcsste sie k\u00f6nnen?",s:"Kein Feature-Katalog. Nur Ihre Wunschvorstellung.",p:"Im besten Fall w\u00fcrde man damit...",f:"Wunschl\u00f6sung"},
+    {q:"Was w\u00e4re eine faire monatliche Investition wenn diese L\u00f6sung wirklich hilft?",s:"Keine Verpflichtung — nur damit wir wissen was realistisch ist.",p:"Ich w\u00fcrde ungef\u00e4hr... pro Monat zahlen",f:"Zahlungsbereitschaft"},
+  ],
+},
+en:{
+  navBoard:"Demand Board",
+  navCta:"Contribute",
+  pillTxt:"companies have already described their problem",
+  heroH1:'Alone a business.<br><em>Together a market.</em>',
+  heroSub:'AI has cut software development costs by <strong>90%</strong>. For the first time, it\u2019s profitable to build software for 50 companies \u2014 not just 5,000. Quoria leverages exactly that.',
+  heroCta1:"Count me in \u2192",
+  heroCta2:"See what others describe",
+  wyLabel:"Why now",
+  wyH:'A shift that changes everything.<br><em>For SMBs.</em>',
+  act1Lbl:"The old problem",
+  act1H:"Software was never built for you.",
+  act1B:"SAP for corporates. Excel for everyone else. SMBs were too big for custom development and too small for off-the-shelf software. Not out of ill will \u2014 but simple economics: development costs were too high. Break-even was unreachable. 3.5 million businesses systematically ignored.",
+  act2Lbl:"The shift",
+  act2H:"AI broke the equation.",
+  act2B:"What cost half a million euros in development in 2020 now costs a fraction. Not because quality suffers \u2014 but because AI has multiplied developer productivity tenfold. Break-even is no longer at 5,000 customers. It\u2019s at 50. This isn\u2019t progress. It\u2019s a paradigm shift.",
+  act3Lbl:"Quoria",
+  act3H:"We aggregate the 50.",
+  act3B:"Quoria connects SMBs with associations as a distribution channel \u2014 and uses AI to cluster demand. Once 50 companies have described the same problem, the build is profitable. We build. All submitters get the solution first \u2014 permanently at the founder\u2019s price. No risk. No waiting.",
+  numLabel:"The quorum principle",
+  numH:'It used to take 5,000 customers to build software profitably.<br>Today, 50 are enough.',
+  numP1:"This isn\u2019t an estimate \u2014 it\u2019s math. AI has cut development costs so dramatically that the break-even point for a SaaS product has dropped 100-fold.",
+  numP2:"Quoria seizes exactly this moment. We collect demand until the quorum is reached \u2014 and then we build. Every time. For every cluster that hits the threshold.",
+  stat1L:"Drop in software development costs through AI since 2022",
+  stat1S:"What used to cost \u20ac500k now costs \u20ac50k",
+  stat2L:"Lower break-even for a SaaS product",
+  stat2S:"Before: 5,000 customers needed \u00b7 Now: 50",
+  stat3L:"Companies = build signal",
+  stat3S:"Submitters permanently receive \u221240% off the list price",
+  howLabel:"The process",
+  howH:"From problem to product.",
+  step1H:"Describe your problem",
+  step1B:"5-minute AI interview. No forms, no login. The AI understands the problem behind the problem.",
+  step2H:"Cluster forms",
+  step2B:"The system detects semantically similar problems \u2014 even when phrased differently.",
+  step3H:"Quorum reached",
+  step3B:"50 companies with the same problem. Break-even is reached. The build signal is triggered.",
+  step4H:"Nexus builds",
+  step4B:"Nexus Collective develops the product \u2014 with AI, fast, for the market. Not for a single customer.",
+  step5H:"Founder\u2019s price",
+  step5B:"Submitters permanently get \u221240% off the list price. Access before the public launch.",
+  dsecLabel:"Live \u00b7 Demand Board",
+  dsecH:"What\u2019s being collected right now.",
+  dsecBtn:"View all",
+  dsecMeta:'Upvoting means: \u201cI have the same problem\u201d \u2014 every vote brings the build trigger closer.',
+  bctaH:'Alone a business.<br><em>Together a market.</em>',
+  bctaS:'For the first time in history, software for 50 companies is profitable. <strong style="color:#e8eef8">Yours could trigger the next build signal.</strong>',
+  bctaBtn:"Join now \u2192",
+  boardLabel:"Demand Board",
+  boardH:'What moves SMBs<br><em>right now.</em>',
+  boardSubmit:"+ Submit a problem",
+  boardSearch:"Search industry or topic...",
+  sortVotes:"By votes",
+  sortWtp:"By willingness to pay",
+  sortProgress:"By progress",
+  qHint:"\u2318 + Enter to continue",
+  qNext:"Next \u2192",
+  qSubmit:"Submit",
+  qFrage:"Question",
+  succLabel:"\u2713 Submitted",
+  succH:'Your problem is<br><em>not alone.</em>',
+  succMt:"other companies have described a similar problem.",
+  succMs:"Threshold for build signal: 50 submissions. Every vote counts.",
+  succBrtl:"Your automatically generated problem brief",
+  succBtn1:"View Demand Board \u2192",
+  succBtn2:"Back to home",
+  badgeTrending:"\u2191 Trending",
+  badgeNear:"Almost reached",
+  perMonth:"/ month",
+  tickerUnit:"companies",
+  topicsUnit:"topics",
+  upvoteHint:'Upvote = \u201cI have the same problem\u201d',
+  emptyTitle:"No results \u2014 perhaps a new problem?",
+  emptyBtn:"Describe a problem \u2192",
+  categories:["All","Sales","HR","Quality","Procurement","Operations","Finance"],
+  clusters:[
+    {title:"Quotation & Calculation",cat:"Sales",desc:"Manual quotes in Excel, calculation errors, slow customer response times.",sec:["Trades","Construction","Building Tech"]},
+    {title:"Staff Scheduling",cat:"HR",desc:"Shift planning via WhatsApp and Excel, sick leave hard to coordinate, no real-time overview.",sec:["Healthcare","Cleaning","Hospitality"]},
+    {title:"Compliance & HACCP Documentation",cat:"Quality",desc:"Mandatory documentation takes hours daily, paper-based processes, audit anxiety.",sec:["Food","Hospitality","Manufacturing"]},
+    {title:"Supplier Evaluation & Selection",cat:"Procurement",desc:"No structured system, gut-feel decisions, no comparability.",sec:["Manufacturing","Retail","Logistics"]},
+    {title:"Customer Portal & Self-Service",cat:"Sales",desc:"Customers constantly asking for order status, manual email updates, no tracking.",sec:["Services","Trades","Agencies"]},
+    {title:"Maintenance Management & Inspection Deadlines",cat:"Operations",desc:"Maintenance intervals by calendar, inspection deadlines missed, unplanned downtimes.",sec:["Manufacturing","Logistics","Construction"]},
+    {title:"Travel Expense Reports",cat:"Finance",desc:"Collecting receipts, manual entry, monthly accounting takes hours per employee.",sec:["Consulting","Sales","Trades"]},
+    {title:"Training Management & Certificates",cat:"HR",desc:"No overview of expiration dates, trainings forgotten, compliance risks.",sec:["Manufacturing","Healthcare","Transport"]},
+  ],
+  questions:[
+    {q:"What industry is your company in, and how many employees do you have?",s:"So we can understand your context \u2014 not required.",p:"e.g. plumbing company, 12 employees...",f:"Industry & Size"},
+    {q:"What costs you the most time or frustration every day?",s:"Describe it the way you\u2019d explain it to a colleague.",p:"Things get chaotic whenever...",f:"Problem"},
+    {q:"How do you solve this today \u2014 even if the solution is unsatisfying?",s:"Excel, phone, manually, not at all \u2014 anything goes.",p:"Usually we do it with...",f:"Current Workaround"},
+    {q:"If there were a perfect solution tomorrow \u2014 what would it need to do?",s:"No feature catalog. Just your ideal scenario.",p:"Ideally you could use it to...",f:"Ideal Solution"},
+    {q:"What would be a fair monthly investment if this solution truly helps?",s:"No commitment \u2014 just so we know what\u2019s realistic.",p:"I\u2019d pay roughly... per month",f:"Willingness to Pay"},
+  ],
+},
+};
+
+let curLang='de';
+let CL=[], QS=[], CATS=[];
+let votes={},cnt=0,acIdx=0,step=0,ans={};
+
+function buildLangData(){
+  const t=T[curLang];
+  CL=CL_BASE.map((b,i)=>({...b,...t.clusters[i]}));
+  QS=t.questions;
+  CATS=t.categories;
+  cnt=CL.reduce((s,c)=>s+c.count,0);
+}
+
+function applyT(){
+  const t=T[curLang];
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k=el.dataset.t;
+    if(t[k]!==undefined) el.innerHTML=t[k];
+  });
+  document.getElementById('sinp').placeholder=t.boardSearch;
+}
+
+function setLang(code){
+  curLang=code;
+  localStorage.setItem('lang',code);
+  document.documentElement.lang=code;
+  document.getElementById('lang-de').classList.toggle('on',code==='de');
+  document.getElementById('lang-en').classList.toggle('on',code==='en');
+  buildLangData();
+  applyT();
+  acIdx=0;
+  buildTicker();rl();buildCats();rb();
+  if(step<QS.length) rq();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  curLang=localStorage.getItem('lang')||'de';
+  document.getElementById('lang-de').classList.toggle('on',curLang==='de');
+  document.getElementById('lang-en').classList.toggle('on',curLang==='en');
+  document.documentElement.lang=curLang;
+  buildLangData();
+  applyT();
+  buildTicker();rl();buildCats();rb();ii();upd();
+  setInterval(()=>{if(Math.random()>.7){cnt++;upd();}},9000);
+});
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
+
+function upd(){document.getElementById('livn').textContent=cnt;document.getElementById('ghost').textContent=cnt;}
+
+function go(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(n+'-page').classList.add('on');
+  document.getElementById('nb').classList.toggle('on',n==='board');
+  scrollTo(0,0);
+  if(n==='board')rb();
+}
+
+function buildTicker(){
+  const t=T[curLang];
+  document.getElementById('ttrack').innerHTML=[...CL,...CL].map(c=>`<span class="titem">${c.count} ${t.tickerUnit} \u00b7 ${c.title} &nbsp;\u2014</span>`).join('');
+}
+
+function rh(c,i){
+  const t=T[curLang];
+  const v=!!votes[c.id],cnt2=c.count+(v?1:0),pct=Math.min(100,Math.round(cnt2/c.thr*100)),near=pct>=80;
+  return`<div class="drow">
+    <div class="ridx">${String(i+1).padStart(2,'0')}</div>
+    <div>
+      <div class="rtw">
+        <span class="rtitle">${c.title}</span>
+        ${c.tr?`<span class="badge bb">${t.badgeTrending}</span>`:''}
+        ${near?`<span class="badge bg2">${t.badgeNear}</span>`:''}
+      </div>
+      <p class="rdesc">${c.desc}</p>
+      <div class="rmeta">
+        <div class="pwrap"><div class="pfill" style="width:${pct}%;background:${near?'var(--green)':'var(--blue)'}"></div></div>
+        <span class="rpt">${cnt2} / ${c.thr}</span>
+        ${c.sec.map(s=>`<span class="sec">${s}</span>`).join('')}
+      </div>
+    </div>
+    <div class="rwtp"><div class="wn">\u20ac${c.wtp}</div><div class="wl">${t.perMonth}</div></div>
+    <button class="vbtn${v?' v':''}" onclick="tv(${c.id})"><span class="varr">\u25b2</span><span class="vcnt">${cnt2}</span></button>
+  </div>`;
+}
+
+function tv(id){votes[id]=!votes[id];rl();rb();}
+function rl(){document.getElementById('lrows').innerHTML=CL.slice(0,4).map((c,i)=>rh(c,i)).join('');}
+
+function buildCats(){
+  document.getElementById('cats').innerHTML=CATS.map((c,i)=>`<button class="cbt${i===acIdx?' on':''}" onclick="sc(${i})">${c}</button>`).join('');
+}
+function sc(i){acIdx=i;document.querySelectorAll('.cbt').forEach((b,j)=>b.classList.toggle('on',j===i));rb();}
+function rb(){
+  const t=T[curLang];
+  const s=(document.getElementById('sinp')?.value||'').toLowerCase();
+  const so=document.getElementById('ssel')?.value||'count';
+  let list=CL.filter(c=>acIdx===0||c.cat===CATS[acIdx]).filter(c=>!s||c.title.toLowerCase().includes(s)||c.sec.some(x=>x.toLowerCase().includes(s)));
+  list.sort((a,b)=>{
+    if(so==='count')return(b.count+(votes[b.id]?1:0))-(a.count+(votes[a.id]?1:0));
+    if(so==='wtp')return b.wtp-a.wtp;
+    return(b.count/b.thr)-(a.count/a.thr);
+  });
+  document.getElementById('binfo').textContent=`${list.length} ${t.topicsUnit} \u00b7 ${t.upvoteHint}`;
+  document.getElementById('brows').innerHTML=list.length
+    ?list.map((c,i)=>rh(c,i)).join('')
+    :`<div class="empty"><p>${t.emptyTitle}</p><button class="btn bpl" onclick="go('iv')">${t.emptyBtn}</button></div>`;
+}
+
+function ii(){step=0;ans={};rq();}
+function ri(){ii();}
+function rq(){
+  const t=T[curLang];
+  const done=step>=QS.length;
+  document.getElementById('qv').style.display=done?'none':'block';
+  document.getElementById('sv').style.display=done?'block':'none';
+  document.getElementById('pfbar').style.width=((step/QS.length)*100)+'%';
+  if(done){
+    document.getElementById('mn').textContent=19+Math.floor(Math.random()*12);
+    document.getElementById('brc').innerHTML=Object.entries(ans).map(([k,v])=>`<div class="bre"><div class="brk">${k}</div><div class="brv">${v}</div></div>`).join('');
+    return;
+  }
+  const q=QS[step];
+  document.getElementById('qcnt').textContent=`${t.qFrage} ${step+1} / ${QS.length}`;
+  document.getElementById('qtxt').textContent=q.q;
+  document.getElementById('qsub').textContent=q.s;
+  const ta=document.getElementById('qta');
+  ta.value='';ta.placeholder=q.p;ta.focus();
+  document.getElementById('bnext').textContent=step===QS.length-1?t.qSubmit:t.qNext;
+  document.getElementById('bnext').classList.remove('rdy');
+  document.getElementById('sbars').innerHTML=QS.map((_,i)=>`<div class="sbar ${i<step?'d':i===step?'c':'f'}"></div>`).join('');
+}
+function oai(){document.getElementById('bnext').classList.toggle('rdy',document.getElementById('qta').value.trim().length>0);}
+function nxtq(){
+  const v=document.getElementById('qta').value.trim();
+  if(!v)return;
+  ans[QS[step].f]=v;step++;rq();
+}
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){
+    if(document.querySelector('.page.on')?.id==='iv-page'&&step<QS.length)nxtq();
+  }
+});
+</script>
+</body>
+</html>
